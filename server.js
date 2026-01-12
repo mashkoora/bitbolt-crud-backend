@@ -1,18 +1,27 @@
 require("dotenv").config();
 
-console.log("SERVER FILE STARTED");
-
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
+
+const userRoutes = require("./routes/userRoutes");
 require("./db");
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+/* 🔴 THESE MUST COME BEFORE ROUTES */
+app.use(cors());              // <-- VERY IMPORTANT
+app.use(express.json());      // <-- VERY IMPORTANT
 
-app.use("/users", require("./routes/userRoutes"));
+/* ROUTES */
+app.use("/users", userRoutes);
 
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
+/* OPTIONAL ROOT TEST */
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
